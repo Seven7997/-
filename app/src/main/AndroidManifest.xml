@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <queries>
+        <package android:name="com.android.systemui" />
+        <package android:name="org.lsposed.manager" />
+    </queries>
+    <application
+        android:label="@string/app_name"
+        android:icon="@drawable/ic_bubble"
+        android:theme="@style/AppTheme"
+        android:allowBackup="false"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="false">
+        <meta-data android:name="xposedmodule" android:value="true" />
+        <meta-data android:name="xposeddescription" android:value="${xposedDescription}" />
+        <meta-data android:name="xposedminversion" android:value="82" />
+        <meta-data android:name="xposedscope" android:resource="@array/xposed_scope" />
+        <activity android:name=".MainActivity" android:exported="true" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+            </intent-filter>
+        </activity>
+        <activity-alias android:name=".LauncherAlias" android:targetActivity=".MainActivity"
+            android:exported="true" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity android:name=".DemoActivity" android:exported="false"
+            android:resizeableActivity="true" android:allowEmbedded="true"
+            android:documentLaunchMode="always"
+            android:windowSoftInputMode="adjustResize" android:theme="@style/DemoTheme" />
+        <provider android:name=".ConfigProvider"
+            android:authorities="io.github.wechatbubbles.config"
+            android:exported="true" android:directBootAware="true" />
+    </application>
+</manifest>

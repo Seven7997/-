@@ -1,0 +1,65 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'io.github.wechatbubbles'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'io.github.wechatbubbles'
+        minSdk 31
+        targetSdk 34
+        versionCode 7
+        versionName '1.2.0'
+        testInstrumentationRunner 'io.github.wechatbubbles.PreviewSizingInstrumentation'
+    }
+    def signingProperties = new Properties()
+    def signingFile = rootProject.file('local-signing.properties')
+    if (signingFile.exists()) signingFile.withInputStream { signingProperties.load(it) }
+    signingConfigs {
+        localRelease {
+            if (signingFile.exists()) {
+                storeFile rootProject.file(signingProperties['storeFile'])
+                storePassword signingProperties['storePassword']
+                keyAlias signingProperties['keyAlias']
+                keyPassword signingProperties['keyPassword']
+            }
+        }
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    testBuildType 'release'
+    flavorDimensions += 'edition'
+    productFlavors {
+        wechatHook {
+            dimension 'edition'
+            versionNameSuffix '-wechatHook'
+            resValue 'string', 'app_name', '微信气泡（微信会话识别版）'
+            manifestPlaceholders = [xposedDescription: 'SystemUI 展示微信通知头像和预览；微信进程只读观察当前小窗会话，不访问聊天数据库或发送接口。']
+        }
+        systemuiOnly {
+            dimension 'edition'
+            versionNameSuffix '-systemuiOnly'
+            resValue 'string', 'app_name', '微信气泡（SystemUI 独立版）'
+            manifestPlaceholders = [xposedDescription: '仅在 SystemUI 处理微信头像气泡和原生小窗，不安装微信进程 Hook；按最近点开的气泡记忆会话。']
+        }
+    }
+    buildTypes {
+        debug { debuggable true }
+        release {
+            minifyEnabled false
+            if (signingFile.exists()) signingConfig signingConfigs.localRelease
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lint {
+        abortOnError true
+        disable 'ObsoleteSdkInt', 'QueryAllPackagesPermission', 'ExpiredTargetSdkVersion'
+    }
+}
+
+dependencies {
+    compileOnly files('libs/xposed-api-82.jar')
+}

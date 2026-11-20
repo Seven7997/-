@@ -1,0 +1,16 @@
+.gradle/
+**/build/
+local.properties
+.signing/
+local-signing.properties
+research-rom/
+verification/*
+!verification/README.md
+*.hprof
+**/__pycache__/
+*.pyc
+# Publish the current release only; keep old builds and source archives local.
+dist/*
+!dist/WeChatBubbles-v1.2.0-WeChatHook.apk
+!dist/WeChatBubbles-v1.2.0-SystemUIOnly.apk
+!dist/验证记录-v1.2.0.md
